@@ -1,8 +1,13 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.views.generic import TemplateView
 from django.contrib import admin
-
 from collection import views
+from django.contrib.auth.views import (
+   password_reset, 
+   password_reset_done,
+   password_reset_confirm,
+   password_reset_complete
+)
 
 urlpatterns = [
 	url(r'^$', views.index, name='home'),
@@ -17,5 +22,31 @@ urlpatterns = [
     url(r'^things/(?P<slug>[-\w]+)/edit/$', 
         views.edit_thing,
         name='edit_thing'),
+    url(r'^accounts/', 
+        include('registration.backends.simple.urls')),
+
+    # the new password reset URLs
+    url(r'^accounts/password/reset/$', 
+        password_reset,
+        {'template_name':
+        'registration/password_reset_form.html'},
+        name="password_reset"),
+    url(r'^accounts/password/reset/done/$',
+        password_reset_done,
+        {'template_name':
+        'registration/password_reset_done.html'},
+        name="password_reset_done"),
+    url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', 
+        password_reset_confirm,
+        {'template_name':
+        'registration/password_reset_confirm.html'},
+        name="password_reset_confirm"),
+    url(r'^accounts/password/done/$', 
+        password_reset_complete,
+        {'template_name':
+        'registration/password_reset_complete.html'},
+        name="password_reset_complete"),
+    url(r'^accounts/',
+        include('registration.backends.simple.urls')),
     url(r'^admin/', admin.site.urls),
 ]
