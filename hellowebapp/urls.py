@@ -8,6 +8,7 @@ from django.contrib.auth.views import (
    password_reset_confirm,
    password_reset_complete
 )
+from collection.backends import MyRegistrationView
 
 urlpatterns = [
 	url(r'^$', views.index, name='home'),
@@ -49,4 +50,13 @@ urlpatterns = [
     url(r'^accounts/',
         include('registration.backends.simple.urls')),
     url(r'^admin/', admin.site.urls),
+
+    url(r'^accounts/register/$', 
+    	MyRegistrationView.as_view(),
+    	name='registration_register'),
+	url(r'^accounts/create_thing/$', views.create_thing, 
+	    name='registration_create_thing'),
+	url(r'^accounts/', 
+	    include('registration.backends.default.urls')),
+	url(r'^admin/', admin.site.urls),
 ]
